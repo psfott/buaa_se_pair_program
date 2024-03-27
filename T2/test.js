@@ -8,4 +8,5 @@ import { mancalaResult } from "./t2-as/build/release.js";
 assert.strictEqual(mancalaResult(1,[11,12],2),30001);
 assert.strictEqual(mancalaResult(1,[14],1),20001);
 
+
 console.log("🎉 You have passed all the tests provided.");

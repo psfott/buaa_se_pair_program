@@ -20,8 +20,6 @@ export function mancalaResult(flag: i32, seq: i32[], size: i32): i32 {
     for (let i = 0; i < size; i++) {
         let tensDigit : i32 = Math.floor(seq[i] / 10) as i32;
         let onesDigit : i32 = Math.floor(seq[i] % 10) as i32;
-        console.log(tensDigit.toString());
-        console.log(turn.toString());
         if (turn != tensDigit) { //检查轮次合法性
             return cheat(i);
         }
