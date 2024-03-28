@@ -4,8 +4,10 @@ export function add(a: i32, b: i32): i32 {
   return a + b;
 }
 export function mancalaBoard(flag: i32, seq: i32[], size: i32): i32[] {
+  flag = seq[0]/10;
   const countMap = new Map<i32, i32>();
   let data : i32 = 0;
+
   // 一号选手的棋洞为0-5号，计分洞为6号
   for (let i = 0; i < 6; i++) {
     countMap.set(i, 4);
@@ -51,6 +53,7 @@ export function mancalaBoard(flag: i32, seq: i32[], size: i32): i32[] {
       }
     }
   }
+
   let board: i32[] = [countMap.get(0),countMap.get(1),countMap.get(2),countMap.get(3),countMap.get(4),countMap.get(5),countMap.get(6),
     countMap.get(7),countMap.get(8),countMap.get(9),countMap.get(10),countMap.get(11),countMap.get(12),countMap.get(13),data];
 
