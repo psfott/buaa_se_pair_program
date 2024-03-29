@@ -11,7 +11,7 @@ export function mancalaOperator(flag: i32, status: i32[]) : i32 {
 // 只考虑自己的情况
 export function mancalaOperatorIndex(flag: i32, status: i32[]): i32 {
     //首先观察能否二次操作
-    for (let i = caculateIndex(flag, 6); i >= caculateIndex(flag, 1); i--) {
+    for (let i = calculateIndex(flag, 6); i >= calculateIndex(flag, 1); i--) {
         if (status[i] != 0) { //当前棋盘格有棋子，可以播撒。
             let nextStatus: i32[] = simulateOneStep(flag, i, status);
             if (nextStatus[14] == 2) { //再次行动优先
@@ -19,7 +19,7 @@ export function mancalaOperatorIndex(flag: i32, status: i32[]): i32 {
             }
         }
     }
-    for (let i = caculateIndex(flag, 6); i >= caculateIndex(flag, 1); i--) {
+    for (let i = calculateIndex(flag, 6); i >= calculateIndex(flag, 1); i--) {
         if (status[i] != 0) { //当前棋盘格有棋子，可以播撒。
             let nextStatus: i32[] = simulateOneStep(flag, i, status);
             if (nextStatus[14] < 0) { //可以进行取子
@@ -28,28 +28,18 @@ export function mancalaOperatorIndex(flag: i32, status: i32[]): i32 {
         }
     }
     let grabMap: i32[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    for (let i = caculateIndex(flag, 6); i >= caculateIndex(flag, 1); i--) {
+    for (let i = calculateIndex(flag, 6); i >= calculateIndex(flag, 1); i--) {
         if (status[i] != 0) {//当前棋盘格有棋子，可以播撒。
             let nextStatus: i32[] = simulateOneStep(flag, i, status);
-            let opponentGrabNum: i32 = 0;
             let nextFlag = flag == 1 ? 2 : 1;
-            for (let j = caculateIndex(nextFlag, 6); j >= caculateIndex(nextFlag, 1); j--) {
-                if (status[j] != 0) {
-                    let nextNextStatus: i32[] = simulateOneStep(nextFlag, j, nextStatus);
-                    if (nextNextStatus[14] < 0) { //对手可以取子
-                        opponentGrabNum = -nextNextStatus[14];
-                        break;
-                    }
-                }
-            }
-            grabMap[i] = opponentGrabNum;
+            grabMap[i] = -traverseOpponent(nextFlag,nextStatus);
         } else {
             grabMap[i] = -1;
         }
     }
     let minGrab = 48;
     let minIndex = -1;
-    for (let i = caculateIndex(flag,6); i >= caculateIndex(flag,1); i--) {
+    for (let i = calculateIndex(flag,6); i >= calculateIndex(flag,1); i--) {
         if (grabMap[i] == 0) {
             return i;
         } else if (grabMap[i] < minGrab && grabMap[i] > 0) {
@@ -125,7 +115,7 @@ export function allocateChess(turn: i32, index: i32, countMap: Map<i32, i32>): i
     return 0;
 }
 
-export function caculateIndex(turn: i32, onesDigit: i32): i32 {
+export function calculateIndex(turn: i32, onesDigit: i32): i32 {
     return 7 * (turn - 1) + onesDigit - 1;
 }
 
@@ -140,4 +130,25 @@ export function Index2Hole(index : i32): i32 {
         oneDigit = index - 6;
     }
     return tenDigit + oneDigit;
+}
+
+
+export function traverseOpponent(flag: i32, status: i32[]): i32 {
+    let maxGrab = 0;
+    for (let i = calculateIndex(flag, 6); i >= calculateIndex(flag, 1); i--) {
+        if (status[i] != 0) {
+            let nextStatus = simulateOneStep(flag, i, status);
+            if (nextStatus[14] < 0) {
+                if (nextStatus[14] < maxGrab) {
+                    maxGrab = nextStatus[14];
+                }
+            } else if (nextStatus[14] == 2) {
+                let subMaxGrab = traverseOpponent(flag, nextStatus);
+                if (subMaxGrab < maxGrab) {
+                    maxGrab = subMaxGrab;
+                }
+            }
+        }
+    }
+    return maxGrab;
 }
