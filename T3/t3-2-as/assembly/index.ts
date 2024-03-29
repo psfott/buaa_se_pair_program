@@ -34,10 +34,12 @@ export function mancalaOperatorIndex(flag: i32, status: i32[]): i32 {
             let opponentGrabNum: i32 = 0;
             let nextFlag = flag == 1 ? 2 : 1;
             for (let j = caculateIndex(nextFlag, 6); j >= caculateIndex(nextFlag, 1); j--) {
-                let nextNextStatus: i32[] = simulateOneStep(nextFlag, j, status);
-                if (nextNextStatus[14] < 0) { //对手可以取子
-                    opponentGrabNum = -nextNextStatus[14];
-                    break;
+                if (status[j] != 0) {
+                    let nextNextStatus: i32[] = simulateOneStep(nextFlag, j, nextStatus);
+                    if (nextNextStatus[14] < 0) { //对手可以取子
+                        opponentGrabNum = -nextNextStatus[14];
+                        break;
+                    }
                 }
             }
             grabMap[i] = opponentGrabNum;
