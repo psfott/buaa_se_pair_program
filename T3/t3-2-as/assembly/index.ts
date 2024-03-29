@@ -75,26 +75,11 @@ export function allocateChess(turn: i32, index: i32, countMap: Map<i32, i32>): i
         }
         countMap.set(index, countMap.get(index) + 1);
     }
-    // 判断游戏是否结束（return 1）
-    let isPlayerOneEmpty = true;
-    for (let i = 0; i < 6; i++) {
-        if (countMap.get(i) > 0) {
-            isPlayerOneEmpty = false;
-            break;
-        }
-    }
-    let isPlayerTwoEmpty = true;
-    for (let i = 7; i < 13; i++) {
-        if (countMap.get(i) > 0) {
-            isPlayerTwoEmpty = false;
-            break;
-        }
-    }
-    if (isPlayerOneEmpty || isPlayerTwoEmpty) {
-        return 1; //游戏结束
-    }
     // 判断是否再次行动 （return 2）
     if ((turn == 1 && index == 6) || (turn == 2 && index == 13)) {
+        if (judgeOver(countMap)) {
+            return 1;
+        }
         return 2;//再次行动
     }
     // 判断是否取子
@@ -103,6 +88,9 @@ export function allocateChess(turn: i32, index: i32, countMap: Map<i32, i32>): i
         countMap.set(index, 0);
         let num: i32 = countMap.get(12 - index);
         countMap.set(12 - index, 0);
+        if (judgeOver(countMap)) {
+            return 1;
+        }
         return -num;
     }
     if (turn == 2 && countMap.get(index) == 1 && (index >= 7 && index < 13) && countMap.get(12 - index) > 0) {
@@ -110,7 +98,13 @@ export function allocateChess(turn: i32, index: i32, countMap: Map<i32, i32>): i
         countMap.set(index, 0);
         let num: i32 = countMap.get(12 - index);
         countMap.set(12 - index, 0);
+        if (judgeOver(countMap)) {
+            return 1;
+        }
         return -num;
+    }
+    if (judgeOver(countMap)) {
+        return 1;
     }
     return 0;
 }
@@ -151,4 +145,22 @@ export function traverseOpponent(flag: i32, status: i32[]): i32 {
         }
     }
     return maxGrab;
+}
+
+export function judgeOver(countMap : Map<i32,i32>) : boolean {
+    let isPlayerOneEmpty = true;
+    for (let i = 0; i < 6; i++) {
+        if (countMap.get(i) > 0) {
+            isPlayerOneEmpty = false;
+            break;
+        }
+    }
+    let isPlayerTwoEmpty = true;
+    for (let i = 7; i < 13; i++) {
+        if (countMap.get(i) > 0) {
+            isPlayerTwoEmpty = false;
+            break;
+        }
+    }
+    return isPlayerOneEmpty || isPlayerTwoEmpty;
 }

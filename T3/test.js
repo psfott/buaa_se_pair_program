@@ -5,7 +5,7 @@ import { mancalaOperator as op1 } from "./t3-2-as/build/release.js";
 
 
 // Choose proper "import" depending on your PL.
-import { mancalaOperator as op2 } from "./t3-2-as-rival/build/release.js";
+import { mancalaOperator as op2 } from "./t3-2-as/build/release.js";
 
 
 // Choose proper "import" depending on your PL.

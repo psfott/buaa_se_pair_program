@@ -78,6 +78,17 @@ export function allocateChess(turn: i32, index: i32, countMap: Map<i32, i32>): i
         }
         countMap.set(index, countMap.get(index) + 1);
     }
+    // 判断是否取子
+    if (turn == 1 && countMap.get(index) == 1 && (index >= 0 && index < 6) && countMap.get(12 - index) > 0) {
+        countMap.set(6, countMap.get(6) + countMap.get(index) + countMap.get(12 - index));
+        countMap.set(index, 0);
+        countMap.set(12 - index, 0);
+    }
+    if (turn == 2 && countMap.get(index) == 1 && (index >= 7 && index < 13) && countMap.get(12 - index) > 0) {
+        countMap.set(13, countMap.get(13) + countMap.get(index) + countMap.get(12 - index));
+        countMap.set(index, 0);
+        countMap.set(12 - index, 0);
+    }
     // 判断游戏是否结束（return 1）
     let isPlayerOneEmpty = true;
     for (let i = 0; i < 6; i++) {
@@ -99,19 +110,6 @@ export function allocateChess(turn: i32, index: i32, countMap: Map<i32, i32>): i
     // 判断是否再次行动 （return 2）
     if ((turn == 1 && index == 6) || (turn == 2 && index == 13)) {
         return 2;//再次行动
-    }
-    // 判断是否取子
-    if (turn == 1 && countMap.get(index) == 1 && (index >= 0 && index < 6) && countMap.get(12 - index) > 0) {
-        countMap.set(6, countMap.get(6) + countMap.get(index) + countMap.get(12 - index));
-        countMap.set(index, 0);
-        countMap.set(12 - index, 0);
-        return 0;
-    }
-    if (turn == 2 && countMap.get(index) == 1 && (index >= 7 && index < 13) && countMap.get(12 - index) > 0) {
-        countMap.set(13, countMap.get(13) + countMap.get(index) + countMap.get(12 - index));
-        countMap.set(index, 0);
-        countMap.set(12 - index, 0);
-        return 0;
     }
     return 0;
 }
